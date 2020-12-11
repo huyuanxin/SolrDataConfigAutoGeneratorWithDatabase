@@ -20,7 +20,7 @@ public class GeneratorOutPutTool {
                 if (file.createNewFile()) {
                     System.out.println("文件生成成功");
                 }
-                System.out.println("文件生成失败");
+                throw new FileNotFoundException("文件创建失败");
             } catch (IOException e) {
                 e.printStackTrace();
             }
