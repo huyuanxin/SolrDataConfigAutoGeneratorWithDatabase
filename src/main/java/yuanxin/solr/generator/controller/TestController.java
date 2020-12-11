@@ -11,6 +11,7 @@ import yuanxin.solr.generator.api.EntityService;
 import yuanxin.solr.generator.api.FieldService;
 import yuanxin.solr.generator.util.GeneratorOutPutTool;
 
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -35,14 +36,17 @@ public class TestController {
         //创建Context对象(存放Model)
         Context context = new Context();
         //放入数据
-        FileWriter writer= GeneratorOutPutTool.newWriter();
-        TemplateEngine templateEngine= GeneratorOutPutTool.newTemplateEngine();
-        context.setVariable("dataSourceList", dataSourceService.generatorDataSourceList());
-        context.setVariable("entityList",entityService.generatorEntityList());
-        // 暂时断言!null
-        assert writer != null;
-        templateEngine.process("data-config",context,writer);
-        writer.close();
-        return "成功";
+        try {
+            FileWriter writer= GeneratorOutPutTool.newWriter();
+            TemplateEngine templateEngine= GeneratorOutPutTool.newTemplateEngine();
+            context.setVariable("dataSourceList", dataSourceService.generatorDataSourceList());
+            context.setVariable("entityList",entityService.generatorEntityList());
+            templateEngine.process("data-config",context,writer);
+            writer.close();
+            return "生成成功";
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+            return "生成失败";
+        }
     }
 }
