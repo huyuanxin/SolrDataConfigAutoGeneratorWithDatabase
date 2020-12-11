@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="yuanxin.solr.generator.dao.GetInfoMapper">
+    <select id="getTableColumnName" resultType="string" parameterType="java.lang.String">
+        SELECT COLUMN_NAME  FROM information_schema.columns WHERE table_name= #{tableName}
+    </select>
+    <select id="getDataBaseTableName" resultType="java.lang.String">
+        select table_name from information_schema.tables where table_schema=#{dataBaseName}
+    </select>
+    <select id="getDataBaseName" resultType="java.lang.String">
+        SELECT SCHEMA_NAME AS `Database` FROM INFORMATION_SCHEMA.SCHEMATA
+    </select>
+</mapper>
