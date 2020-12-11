@@ -4,6 +4,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -12,14 +13,14 @@ import java.io.IOException;
  * @create 2020/12/11 9:03
  */
 public class GeneratorOutPutTool {
-    public static FileWriter newWriter() {
+    public static FileWriter newWriter()throws FileNotFoundException{
         File file = new File("data-config.xml");
         if (!file.exists()) {
             try {
                 if (file.createNewFile()) {
-                    System.out.println("新文件生成成功");
+                    System.out.println("文件生成成功");
                 }
-                System.out.println("新文件生成失败");
+                System.out.println("文件生成失败");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -30,10 +31,10 @@ public class GeneratorOutPutTool {
             writer.flush();
             return writer;
         } catch (IOException e) {
-            System.out.println("新文件生成失败");
+            System.out.println("文件生成失败");
             e.printStackTrace();
         }
-        return null;
+       throw new FileNotFoundException("文件创建失败");
     }
 
     public static TemplateEngine newTemplateEngine() {
