@@ -31,7 +31,6 @@ public class GeneratorOutPutTool {
             writer.flush();
             return writer;
         } catch (IOException e) {
-            System.out.println("文件生成失败");
             e.printStackTrace();
         }
        throw new FileNotFoundException("文件创建失败");
