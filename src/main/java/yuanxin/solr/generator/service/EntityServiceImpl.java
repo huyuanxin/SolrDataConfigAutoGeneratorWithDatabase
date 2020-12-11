@@ -63,8 +63,8 @@ public class EntityServiceImpl implements EntityService {
     /**
      * 构造data-config需要的Query语句
      *
-     * @param tableName 表名
-     * @return 构造的Query语句
+     * @param tableName 表名 {@link String}
+     * @return 构造的Query语句 {@link String}
      */
     @Override
     public String generatorQuerySqlCommand(String tableName) {
@@ -85,8 +85,8 @@ public class EntityServiceImpl implements EntityService {
     /**
      * 构造data-config需要的DeltaImportQuery语句
      *
-     * @param tableName 表名
-     * @return 构造的DeltaImportQuery语句
+     * @param tableName 表名 {@link String}
+     * @return 构造的DeltaImportQuery语句 {@link String}
      */
     @Override
     public String generatorDeltaImportQuerySqlCommand(String tableName) {

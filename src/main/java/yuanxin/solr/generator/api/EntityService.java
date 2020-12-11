@@ -30,16 +30,16 @@ public interface EntityService {
     /**
      * 构造data-config需要的DeltaImportQuery语句
      *
-     * @param tableName 表名
-     * @return 构造的DeltaImportQuery语句
+     * @param tableName 表名 {@link String}
+     * @return 构造的DeltaImportQuery语句 {@link String}
      */
     String generatorDeltaImportQuerySqlCommand(String tableName);
 
     /**
      * 构造data-config需要的DeltaQuery语句
      *
-     * @param tableName 表名
-     * @return 构造的DeltaQuery语句
+     * @param tableName 表名 {@link String}
+     * @return 构造的DeltaQuery语句 {@link String}
      */
     String generatorDeltaQuerySqlCommand(String tableName);
 }

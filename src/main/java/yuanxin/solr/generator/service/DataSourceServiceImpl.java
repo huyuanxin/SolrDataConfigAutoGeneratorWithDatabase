@@ -23,7 +23,7 @@ public class DataSourceServiceImpl implements DataSourceService {
     }
 
     /**
-     * 返回需要生成的DataSource {@link List < DataSource >}
+     * 返回需要生成的DataSource {@link List<DataSource>}
      *
      * @return 需要生成的DataSource {@link List<DataSource>}
      */
