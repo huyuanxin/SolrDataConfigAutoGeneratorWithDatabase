@@ -1,6 +1,7 @@
 package yuanxin.solr.generator.dao;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,10 +16,11 @@ public interface GetInfoMapper {
     /**
      * 获得表中的列名
      *
-     * @param tableName 表名 {@link String}
+     * @param tableName    表名 {@link String}
+     * @param dataBaseName 数据库名 {@link String}
      * @return 从表中拿到的列名 {@link List<String>}
      */
-    List<String> getTableColumnName(String tableName);
+    List<String> getTableColumnName(@Param("tableName") String tableName, @Param("dataBaseName") String dataBaseName);
 
     /**
      * 获得数据库中的表名
