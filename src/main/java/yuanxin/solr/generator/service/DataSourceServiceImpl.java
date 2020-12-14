@@ -30,8 +30,10 @@ public class DataSourceServiceImpl implements DataSourceService {
     @Override
     public List<DataSource> generatorDataSourceList() {
         List<DataSource> dataSourceList = new ArrayList<>();
-        // 去除系统表
-        List<String> dataBaseNameList=getDataBaseNameExceptSystemDataBase();
+        // 去除系统表和自定义表
+        List<String> ignoreDataBaseNameList=new ArrayList<>();
+        ignoreDataBaseNameList.add("chenrui");
+        List<String> dataBaseNameList = getDataBaseNameAfterFitter(ignoreDataBaseNameList);
         for (String dataBaseName : dataBaseNameList
         ) {
             DataSource dataSource = new DataSource();
@@ -60,6 +62,22 @@ public class DataSourceServiceImpl implements DataSourceService {
         dataBaseNameList.removeIf("sys"::equals);
         dataBaseNameList.removeIf("world"::equals);
         dataBaseNameList.removeIf("sakila"::equals);
+        return dataBaseNameList;
+    }
+
+    /**
+     * 排除自定义无需生成的数据库
+     *
+     * @param ignoreDataBaseNameList 自定义无需的生成的数据库名 {@link List<String>}
+     * @return 排除自定义无需生成的数据库后的数据库名 {@link List<String>}
+     */
+    @Override
+    public List<String> getDataBaseNameAfterFitter(List<String> ignoreDataBaseNameList) {
+        List<String> dataBaseNameList = getDataBaseNameExceptSystemDataBase();
+        for (String ignoreDataBaseName : ignoreDataBaseNameList
+        ) {
+            dataBaseNameList.removeIf(ignoreDataBaseName::equals);
+        }
         return dataBaseNameList;
     }
 }

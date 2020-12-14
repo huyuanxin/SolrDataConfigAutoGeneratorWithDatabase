@@ -14,8 +14,10 @@ import java.util.List;
 public interface FieldService {
     /**
      * 返回要生成的Field {@link List<Field>}
-     * @param tableName 表名 {@link String}
+     *
+     * @param tableName    表名 {@link String}
+     * @param dataBaseName 数据库名 {@link String}
      * @return 需要生成的Field {@link List<Field>}
      */
-    List<Field> generatorFieldList(String tableName);
+    List<Field> generatorFieldList(String tableName, String dataBaseName);
 }

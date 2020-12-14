@@ -8,6 +8,7 @@ import yuanxin.solr.generator.api.FieldService;
 import yuanxin.solr.generator.dao.GetInfoMapper;
 import yuanxin.solr.generator.entity.Entity;
 import yuanxin.solr.generator.entity.Field;
+import yuanxin.solr.generator.entity.IgnoreTable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,18 +40,33 @@ public class EntityServiceImpl implements EntityService {
 
         List<Entity> entityList = new ArrayList<>();
         //获得数据库内除系统表外所有数据库名
-        List<String> dataBaseNameList = dataSourceService.getDataBaseNameExceptSystemDataBase();
+        List<String> ignoreDataBaseNameList = new ArrayList<>();
+        ignoreDataBaseNameList.add("chenrui");
+        List<String> dataBaseNameList = dataSourceService.getDataBaseNameAfterFitter(ignoreDataBaseNameList);
         // 读取库内所有表
         for (String dataBaseName : dataBaseNameList
         ) {
             List<String> tableNameList = getInfoMapper.getDataBaseTableName(dataBaseName);
+            List<IgnoreTable> ignoreTableList = new ArrayList<>();
+            List<String> list = new ArrayList<>();
+            list.add("tablecounter");
+            list.add("user");
+            IgnoreTable table = new IgnoreTable("spring", list);
+            ignoreTableList.add(table);
+            List<String> tableNameListAfterFitter = getIgnoreTableName(dataBaseName, ignoreTableList);
+            for (String tableName : tableNameListAfterFitter
+            ) {
+                tableNameList.removeIf(tableName::equals);
+            }
+            // 生entity
             for (String tableName : tableNameList
             ) {
-                // 读取每个表的列名
-                List<Field> fieldList = fieldService.generatorFieldList(tableName);
+                List<Field> fieldList = fieldService.generatorFieldList(tableName, dataBaseName);
+                // 去除不需要的字段
+                //some code
                 // 每个表生成一个Entity
-                Entity entity = new Entity(tableName, dataBaseName, generatorQuerySqlCommand(tableName),
-                        generatorDeltaImportQuerySqlCommand(tableName),
+                Entity entity = new Entity(tableName, dataBaseName, generatorQuerySqlCommand(tableName, dataBaseName),
+                        generatorDeltaImportQuerySqlCommand(tableName, dataBaseName),
                         generatorDeltaQuerySqlCommand(tableName),
                         fieldList);
                 // 加入到List
@@ -67,10 +83,10 @@ public class EntityServiceImpl implements EntityService {
      * @return 构造的Query语句 {@link String}
      */
     @Override
-    public String generatorQuerySqlCommand(String tableName) {
+    public String generatorQuerySqlCommand(String tableName, String dataBaseName) {
         // Select uid,`Name`,`Desc`,create_time,age From demo
         //获得列
-        List<String> columnNameList = getInfoMapper.getTableColumnName(tableName);
+        List<String> columnNameList = getInfoMapper.getTableColumnName(tableName, dataBaseName);
         StringBuilder sql = new StringBuilder();
         // 构造Query
         sql.append("Select ");
@@ -89,10 +105,10 @@ public class EntityServiceImpl implements EntityService {
      * @return 构造的DeltaImportQuery语句 {@link String}
      */
     @Override
-    public String generatorDeltaImportQuerySqlCommand(String tableName) {
+    public String generatorDeltaImportQuerySqlCommand(String tableName, String dataBaseName) {
         // 此处需要每个表都要一个id字段
         // Select uid,`Name`,`Desc`,create_time,age From demo where uid='${dataimporter.delta.id}'
-        String sql = generatorQuerySqlCommand(tableName);
+        String sql = generatorQuerySqlCommand(tableName, dataBaseName);
         return sql + " where uid='${dataimporter.delta.id}'";
     }
 
@@ -107,5 +123,16 @@ public class EntityServiceImpl implements EntityService {
         // 此处需要每个表都要一个create_time字段
         // select uid from demo where create_time &gt; '${dataimporter.last_index_time}'
         return "Select uid Form " + tableName + " where create_time > '${dataimporter.last_index_time}'";
+    }
+
+    private List<String> getIgnoreTableName(String dataBaseName, List<IgnoreTable> ignoreTableList) {
+        List<String> resp = new ArrayList<>();
+        for (IgnoreTable ignoredTable : ignoreTableList
+        ) {
+            if (dataBaseName.equals(ignoredTable.getDataBaseName())) {
+                resp = ignoredTable.getTableNameList();
+            }
+        }
+        return resp;
     }
 }

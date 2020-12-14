@@ -27,8 +27,8 @@ public class FieldServiceImpl implements FieldService {
      * @return 需要生成的Field {@link List<Field>}
      */
     @Override
-    public List<Field> generatorFieldList(String tableName) {
-        List<String> list = getInfoMapper.getTableColumnName(tableName);
+    public List<Field> generatorFieldList(String tableName, String dataBaseName) {
+        List<String> list = getInfoMapper.getTableColumnName(tableName, dataBaseName);
         List<Field> fieldList = new ArrayList<>();
         for (String s : list
         ) {
