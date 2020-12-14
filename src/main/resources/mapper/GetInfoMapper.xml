@@ -4,7 +4,8 @@
 
     <select id="getTableColumnName" resultType="string" parameterType="java.lang.String">
         <if test="_databaseId == 'mysql'">
-            SELECT COLUMN_NAME FROM information_schema.columns WHERE table_name= #{tableName};
+            SELECT COLUMN_NAME FROM information_schema.columns WHERE table_name= #{tableName} and
+            table_schema=#{dataBaseName}
         </if>
         <if test="_databaseId=='oracle'">
             Select COLUMN_NAME From user_tab_columns WHERE TABLE_NAME = #{tableName}
