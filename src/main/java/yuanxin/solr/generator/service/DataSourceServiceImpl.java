@@ -31,9 +31,9 @@ public class DataSourceServiceImpl implements DataSourceService {
     public List<DataSource> generatorDataSourceList() {
         List<DataSource> dataSourceList = new ArrayList<>();
         // 去除系统表和自定义表
-        List<String> ignoreDataBaseNameList=new ArrayList<>();
+        List<String> ignoreDataBaseNameList = new ArrayList<>();
         ignoreDataBaseNameList.add("chenrui");
-        List<String> dataBaseNameList = getDataBaseNameAfterFitter(ignoreDataBaseNameList);
+        List<String> dataBaseNameList = getDataBaseName(ignoreDataBaseNameList);
         for (String dataBaseName : dataBaseNameList
         ) {
             DataSource dataSource = new DataSource();
@@ -48,12 +48,13 @@ public class DataSourceServiceImpl implements DataSourceService {
     }
 
     /**
-     * 获得无系统表的数据库表名
+     * 排除自定义无需生成的数据库
      *
-     * @return 排除系统表后的数据库名 {@link String}
+     * @param ignoreDataBaseNameList 自定义无需的生成的数据库名 {@link List<String>}
+     * @return 排除自定义无需生成的数据库后的数据库名 {@link List<String>}
      */
     @Override
-    public List<String> getDataBaseNameExceptSystemDataBase() {
+    public List<String> getDataBaseName(List<String> ignoreDataBaseNameList) {
         List<String> dataBaseNameList = getInfoMapper.getDataBaseName();
         // 去除系统表
         dataBaseNameList.removeIf("information_schema"::equals);
@@ -62,18 +63,7 @@ public class DataSourceServiceImpl implements DataSourceService {
         dataBaseNameList.removeIf("sys"::equals);
         dataBaseNameList.removeIf("world"::equals);
         dataBaseNameList.removeIf("sakila"::equals);
-        return dataBaseNameList;
-    }
-
-    /**
-     * 排除自定义无需生成的数据库
-     *
-     * @param ignoreDataBaseNameList 自定义无需的生成的数据库名 {@link List<String>}
-     * @return 排除自定义无需生成的数据库后的数据库名 {@link List<String>}
-     */
-    @Override
-    public List<String> getDataBaseNameAfterFitter(List<String> ignoreDataBaseNameList) {
-        List<String> dataBaseNameList = getDataBaseNameExceptSystemDataBase();
+        // 去除指定表
         for (String ignoreDataBaseName : ignoreDataBaseNameList
         ) {
             dataBaseNameList.removeIf(ignoreDataBaseName::equals);

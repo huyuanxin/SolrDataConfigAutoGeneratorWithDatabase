@@ -20,7 +20,7 @@ public interface GetInfoMapper {
      * @param dataBaseName 数据库名 {@link String}
      * @return 从表中拿到的列名 {@link List<String>}
      */
-    List<String> getTableColumnName(@Param("tableName") String tableName, @Param("dataBaseName") String dataBaseName);
+    List<String> getTableColumnName(@Param("dataBaseName") String dataBaseName, @Param("tableName") String tableName);
 
     /**
      * 获得数据库中的表名
