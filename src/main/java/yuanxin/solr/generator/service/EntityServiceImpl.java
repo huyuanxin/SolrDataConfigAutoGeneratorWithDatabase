@@ -109,7 +109,7 @@ public class EntityServiceImpl implements EntityService {
      */
     @Override
     public String generatorDeltaQuerySqlCommand(String tableName) {
-        return "Select uid Form " + tableName + " where create_time > '${dataimporter.last_index_time}'";
+        return "Select id Form " + tableName + " where create_time > '${dataimporter.last_index_time}'";
     }
 
     /**
@@ -119,7 +119,6 @@ public class EntityServiceImpl implements EntityService {
      * @param ignoreTableList 不需要的表名 {@link List<IgnoreTable>}
      * @return 表名 {@link String}
      */
-
 
     @Override
     public List<String> getDataTableName(String dataBaseName, List<IgnoreTable> ignoreTableList) {
@@ -137,5 +136,4 @@ public class EntityServiceImpl implements EntityService {
         }
         return allTableName;
     }
-
 }
