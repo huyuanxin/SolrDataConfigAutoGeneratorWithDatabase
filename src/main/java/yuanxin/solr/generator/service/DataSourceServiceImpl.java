@@ -1,6 +1,8 @@
 package yuanxin.solr.generator.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import yuanxin.solr.generator.api.DataSourceService;
 import yuanxin.solr.generator.dao.GetInfoMapper;
@@ -14,8 +16,21 @@ import java.util.List;
  * @create 2020/12/10 14:29
  */
 @Service("DataSourceService")
+@PropertySource(value = {"classpath:application.properties"})
 public class DataSourceServiceImpl implements DataSourceService {
     final GetInfoMapper getInfoMapper;
+
+    @Value("${spring.datasource.driver-class-name}")
+    String dataBaseDriverClassName;
+
+    @Value("${spring.datasource.username}")
+    String dataBaseUserName;
+
+    @Value("${spring.datasource.password}")
+    String dataBasePassword;
+
+    @Value("${spring.datasource.url}")
+    String dataBaseUrl;
 
     @Autowired
     public DataSourceServiceImpl(GetInfoMapper getInfoMapper) {
@@ -34,14 +49,14 @@ public class DataSourceServiceImpl implements DataSourceService {
         List<String> ignoreDataBaseNameList = new ArrayList<>();
         ignoreDataBaseNameList.add("chenrui");
         List<String> dataBaseNameList = getDataBaseName(ignoreDataBaseNameList);
+        DataSource dataSource = new DataSource();
+        dataSource.setDataConfigDriver(dataBaseDriverClassName);
+        dataSource.setDataConfigUser(dataBaseUserName);
+        dataSource.setDataConfigPassword(dataBasePassword);
         for (String dataBaseName : dataBaseNameList
         ) {
-            DataSource dataSource = new DataSource();
-            dataSource.setDataConfigDriver("com.mysql.cj.jdbc.Driver");
-            dataSource.setDataConfigUser("root");
-            dataSource.setDataConfigPassword("root");
             dataSource.setDataConfigName(dataBaseName);
-            dataSource.setDataConfigUrl("jdbc:mysql://localhost:3306/" + dataBaseName);
+            dataSource.setDataConfigUrl(dataBaseUrl + dataBaseName);
             dataSourceList.add(dataSource);
         }
         return dataSourceList;
