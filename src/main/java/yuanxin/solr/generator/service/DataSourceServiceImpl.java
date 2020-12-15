@@ -21,16 +21,16 @@ public class DataSourceServiceImpl implements DataSourceService {
     final GetInfoMapper getInfoMapper;
 
     @Value("${spring.datasource.driver-class-name}")
-    String dataBaseDriverClassName;
+    private String dataBaseDriverClassName;
 
     @Value("${spring.datasource.username}")
-    String dataBaseUserName;
+    private String dataBaseUserName;
 
     @Value("${spring.datasource.password}")
-    String dataBasePassword;
+    private String dataBasePassword;
 
     @Value("${spring.datasource.url}")
-    String dataBaseUrl;
+    private String dataBaseUrl;
 
     @Autowired
     public DataSourceServiceImpl(GetInfoMapper getInfoMapper) {
